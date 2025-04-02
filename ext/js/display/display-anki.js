@@ -415,8 +415,9 @@ export class DisplayAnki {
     /**
      * @param {HTMLButtonElement} button
      * @param {number[]} noteIds
+     * @param {(import('anki').NoteInfo | null)[] | null} [noteInfos]
      */
-    _updateSaveButtonForDuplicateBehavior(button, noteIds) {
+    _updateSaveButtonForDuplicateBehavior(button, noteIds, noteInfos) {
         const behavior = this._duplicateBehavior;
         if (behavior === 'prevent') {
             button.disabled = true;
@@ -450,6 +451,27 @@ export class DisplayAnki {
         if (actionIcon instanceof HTMLElement) {
             actionIcon.dataset.icon = `${iconPrefix}-${mode}`;
         }
+        
+        let hasNewCards = false;
+        if (noteInfos) {
+            for (const noteInfo of noteInfos) {
+                if (noteInfo && noteInfo.cardsInfo) {
+                    for (const cardInfo of noteInfo.cardsInfo) {
+                        if (cardInfo && cardInfo.queue === 0) {
+                            hasNewCards = true;
+                            break;
+                        }
+                    }
+                    if (hasNewCards) break;
+                }
+            }
+        }
+        
+        if (hasNewCards) {
+            button.classList.add('duplicate-new');
+        } else {
+            button.classList.remove('duplicate-new');
+        }
     }
 
     /**
@@ -471,7 +493,7 @@ export class DisplayAnki {
 
                     // If entry has noteIds, show the "add duplicate" button.
                     if (Array.isArray(noteIds) && noteIds.length > 0) {
-                        this._updateSaveButtonForDuplicateBehavior(button, noteIds);
+                        this._updateSaveButtonForDuplicateBehavior(button, noteIds, noteInfos);
                     }
                 }
 
@@ -786,7 +808,7 @@ export class DisplayAnki {
                         allErrors.push(toError(e));
                     }
                 }
-                this._updateSaveButtonForDuplicateBehavior(button, [noteId]);
+                this._updateSaveButtonForDuplicateBehavior(button, [noteId], null);
 
                 this._updateViewNoteButton(dictionaryEntryIndex, [noteId], true);
             }

@@ -680,9 +680,13 @@ export class Backend {
         const cardsInfo = await this._anki.cardsInfo(cardIds);
         for (let i = 0; i < notesInfo.length; i++) {
             if (notesInfo[i] !== null) {
-                const cardInfo = cardsInfo.find((x) => x?.noteId === notesInfo[i]?.noteId);
-                if (cardInfo) {
-                    notesInfo[i]?.cardsInfo.push(cardInfo);
+                const noteCardInfos = cardsInfo.filter((x) => x?.noteId === notesInfo[i]?.noteId);
+                if (noteCardInfos.length > 0) {
+                    for (const cardInfo of noteCardInfos) {
+                        if (cardInfo) {
+                            notesInfo[i]?.cardsInfo.push(cardInfo);
+                        }
+                    }
                 }
             }
         }

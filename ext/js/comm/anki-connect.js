@@ -702,12 +702,14 @@ export class AnkiConnect {
                 result2.push(null);
                 continue;
             }
+            const {queue} = /** @type {{[key: string]: unknown}} */ (item);
 
             /** @type {import('anki').CardInfo} */
             const item2 = {
                 noteId: note,
                 cardId,
                 flags: typeof flags === 'number' ? flags : 0,
+                queue: typeof queue === 'number' ? queue : undefined,
             };
             result2.push(item2);
         }

@@ -69,6 +69,7 @@ export type CardInfo = {
     noteId: NoteId;
     cardId: CardId;
     flags: number;
+    queue?: number; // 0 = new, 1 = learning, 2 = review, -1 = suspended, -2 = buried
 };
 
 export type ApiReflectResult = {

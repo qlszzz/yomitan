@@ -700,6 +700,16 @@ button.action-button:active {
     background-color: var(--action-button-active-color);
     box-shadow: none;
 }
+
+button.action-button.duplicate-new {
+    background-color: #e6ffe6; /* Light green background */
+    border-color: #00cc00; /* Green border */
+}
+
+.popup-theme-dark button.action-button.duplicate-new {
+    background-color: #004d00; /* Darker green for dark theme */
+    border-color: #00cc00;
+}
 .icon[data-icon=view-note]      { background-image: url('/images/view-note.svg'); }
 .icon[data-icon=add-term-kanji] { background-image: url('/images/add-term-kanji.svg'); }
 .icon[data-icon=add-term-kana]  { background-image: url('/images/add-term-kana.svg'); }
