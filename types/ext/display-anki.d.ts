@@ -55,7 +55,7 @@ export type DictionaryEntryModeDetails = {
     /**
      * Queue status for cards associated with duplicate notes (0=new, 1=learning, 2=review, etc.)
      */
-    cardQueues?: Record<Anki.CardId, number>;
+    cardQueues?: Record<Anki.CardId, number> | undefined;
 };
 
 export type CreateNoteResult = {

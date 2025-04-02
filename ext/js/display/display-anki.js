@@ -415,7 +415,7 @@ export class DisplayAnki {
     /**
      * @param {HTMLButtonElement} button
      * @param {number[]} noteIds
-     * @param {Record<number, number> | null} cardQueues
+     * @param {Record<number, number> | null | undefined} cardQueues
      */
     _updateSaveButtonForDuplicateBehavior(button, noteIds, cardQueues) {
         const behavior = this._duplicateBehavior;
@@ -451,9 +451,8 @@ export class DisplayAnki {
         if (actionIcon instanceof HTMLElement) {
             actionIcon.dataset.icon = `${iconPrefix}-${mode}`;
         }
-        
         if (cardQueues !== null && cardQueues !== undefined) {
-            const hasNewCard = Object.values(cardQueues).some(queue => queue === 0);
+            const hasNewCard = Object.values(cardQueues).includes(0);
             if (hasNewCard) {
                 button.classList.add('duplicate-card-new');
             } else {
@@ -969,7 +968,8 @@ export class DisplayAnki {
             const {note, errors, requirements} = noteInfoList[i];
             const {canAdd, valid, noteIds, noteInfos} = infos[i];
             const {mode, index} = noteTargets[i];
-            results[index].modeMap.set(mode, {mode, note, errors, requirements, canAdd, valid, noteIds, noteInfos, ankiError, cardQueues: infos[i].cardQueues});
+            const cardQueues = infos[i].cardQueues === null ? undefined : infos[i].cardQueues;
+            results[index].modeMap.set(mode, {mode, note, errors, requirements, canAdd, valid, noteIds, noteInfos, ankiError, cardQueues});
         }
         return results;
     }

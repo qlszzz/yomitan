@@ -117,54 +117,54 @@ test('anki add duplicate with new card indicator', async ({context, page, extens
                 requestJson !== null
             ) {
                 const action = /** @type {Record<string, unknown>} */ (requestJson).action;
-                if (action === 'findNotes') {
-                    return route.fulfill({
-                        status: 200,
-                        contentType: 'text/json',
-                        body: JSON.stringify({result: [1234]})
-                    });
-                } else if (action === 'notesInfo') {
-                    return route.fulfill({
-                        status: 200,
-                        contentType: 'text/json',
-                        body: JSON.stringify({
-                            result: [{
-                                noteId: 1234,
-                                modelName: 'Mock Model',
-                                tags: [],
-                                fields: {
-                                    Expression: {value: '読む', order: 0},
-                                    Reading: {value: 'よむ', order: 1},
-                                    Meaning: {value: 'to read', order: 2}
-                                },
-                                cards: [5678]
-                            }]
-                        })
-                    });
-                } else if (action === 'findCards') {
-                    return route.fulfill({
-                        status: 200,
-                        contentType: 'text/json',
-                        body: JSON.stringify({result: [5678]})
-                    });
-                } else if (action === 'cardsInfo') {
-                    return route.fulfill({
-                        status: 200,
-                        contentType: 'text/json',
-                        body: JSON.stringify({
-                            result: [{
-                                cardId: 5678,
-                                noteId: 1234,
-                                deckName: 'Mock Deck',
-                                queue: 0, // 0 = new card
-                                flags: 0
-                            }]
-                        })
-                    });
+                switch (action) {
+                    case 'findNotes':
+                        return route.fulfill({
+                            status: 200,
+                            contentType: 'text/json',
+                            body: JSON.stringify({result: [1234]}),
+                        });
+                    case 'notesInfo':
+                        return route.fulfill({
+                            status: 200,
+                            contentType: 'text/json',
+                            body: JSON.stringify({
+                                result: [{
+                                    noteId: 1234,
+                                    modelName: 'Mock Model',
+                                    tags: [],
+                                    fields: {
+                                        Expression: {value: '読む', order: 0},
+                                        Reading: {value: 'よむ', order: 1},
+                                        Meaning: {value: 'to read', order: 2},
+                                    },
+                                    cards: [5678],
+                                }],
+                            }),
+                        });
+                    case 'findCards':
+                        return route.fulfill({
+                            status: 200,
+                            contentType: 'text/json',
+                            body: JSON.stringify({result: [5678]}),
+                        });
+                    case 'cardsInfo':
+                        return route.fulfill({
+                            status: 200,
+                            contentType: 'text/json',
+                            body: JSON.stringify({
+                                result: [{
+                                    cardId: 5678,
+                                    noteId: 1234,
+                                    deckName: 'Mock Deck',
+                                    queue: 0, // 0 = new card
+                                    flags: 0,
+                                }],
+                            }),
+                        });
                 }
             }
         }
-        
         void mockAnkiRouteHandler(route);
     });
 
@@ -194,6 +194,6 @@ test('anki add duplicate with new card indicator', async ({context, page, extens
         await expect(page.locator('#search-textbox')).toHaveValue('読む');
     }).toPass({timeout: 5000});
     await page.locator('#search-textbox').press('Enter');
-    
+
     await expect(page.locator('[data-mode="term-kanji"]')).toHaveClass(/duplicate-card-new/);
 });
