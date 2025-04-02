@@ -49,7 +49,7 @@ export type NoteInfoWrapper = {
     valid: boolean;
     noteIds: NoteId[] | null;
     noteInfos?: (NoteInfo | null)[];
-    cardQueues?: Record<CardId, number>;
+    cardQueues?: Record<CardId, number> | null;
 };
 
 export type NoteInfo = {
