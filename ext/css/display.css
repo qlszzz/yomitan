@@ -700,6 +700,10 @@ button.action-button:active {
     background-color: var(--action-button-active-color);
     box-shadow: none;
 }
+button.action-button.action-button-new-card {
+    background-color: rgba(92, 184, 92, 0.2); /* Light green background */
+    border-radius: 4px;
+}
 .icon[data-icon=view-note]      { background-image: url('/images/view-note.svg'); }
 .icon[data-icon=add-term-kanji] { background-image: url('/images/add-term-kanji.svg'); }
 .icon[data-icon=add-term-kana]  { background-image: url('/images/add-term-kana.svg'); }

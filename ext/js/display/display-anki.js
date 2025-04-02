@@ -416,7 +416,14 @@ export class DisplayAnki {
      * @param {HTMLButtonElement} button
      * @param {number[]} noteIds
      */
-    _updateSaveButtonForDuplicateBehavior(button, noteIds) {
+    /**
+     * @param {HTMLButtonElement} button
+     * @param {import('anki').NoteId[]} noteIds
+     * @param {(?import('anki').NoteInfo)[]=} noteInfos
+     */
+    _updateSaveButtonForDuplicateBehavior(button, noteIds, noteInfos) {
+        button.classList.remove('action-button-new-card');
+        
         const behavior = this._duplicateBehavior;
         if (behavior === 'prevent') {
             button.disabled = true;
@@ -437,7 +444,12 @@ export class DisplayAnki {
             delete button.dataset.overwrite;
         }
 
-        button.setAttribute('title', `${verb} ${target}`);
+        if (noteInfos && this._isAnyNoteNew(noteInfos)) {
+            button.classList.add('action-button-new-card');
+            button.setAttribute('title', `${verb} ${target} (card exists in new queue)`);
+        } else {
+            button.setAttribute('title', `${verb} ${target}`);
+        }
 
         // eslint-disable-next-line no-underscore-dangle
         const hotkeyLabel = this._display._hotkeyHelpController.getHotkeyLabel(button);
@@ -450,6 +462,24 @@ export class DisplayAnki {
         if (actionIcon instanceof HTMLElement) {
             actionIcon.dataset.icon = `${iconPrefix}-${mode}`;
         }
+    }
+    
+    /**
+     * Checks if any of the provided notes have cards in the "new" queue
+     * @param {(?import('anki').NoteInfo)[]} noteInfos
+     * @returns {boolean}
+     */
+    _isAnyNoteNew(noteInfos) {
+        for (const noteInfo of noteInfos) {
+            if (noteInfo === null) { continue; }
+            
+            if (noteInfo.cardsInfo.length === 0) { continue; }
+            
+            if (noteInfo.cardsInfo.some(cardInfo => cardInfo.flags === 0)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -471,7 +501,7 @@ export class DisplayAnki {
 
                     // If entry has noteIds, show the "add duplicate" button.
                     if (Array.isArray(noteIds) && noteIds.length > 0) {
-                        this._updateSaveButtonForDuplicateBehavior(button, noteIds);
+                        this._updateSaveButtonForDuplicateBehavior(button, noteIds, noteInfos);
                     }
                 }
 
@@ -786,7 +816,7 @@ export class DisplayAnki {
                         allErrors.push(toError(e));
                     }
                 }
-                this._updateSaveButtonForDuplicateBehavior(button, [noteId]);
+                this._updateSaveButtonForDuplicateBehavior(button, [noteId], []);
 
                 this._updateViewNoteButton(dictionaryEntryIndex, [noteId], true);
             }
