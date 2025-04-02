@@ -424,31 +424,43 @@ export class DisplayAnki {
         }
 
         const mode = button.dataset.mode;
-        const verb = behavior === 'overwrite' ? 'Overwrite' : 'Add duplicate';
-        const iconPrefix = behavior === 'overwrite' ? 'overwrite' : 'add-duplicate';
+        const hasExistingNotes = noteIds.some((id) => id !== INVALID_NOTE_ID);
         const target = mode === 'term-kanji' ? 'expression' : 'reading';
-
+        
         if (behavior === 'overwrite') {
             button.dataset.overwrite = 'true';
-            if (!noteIds.some((id) => id !== INVALID_NOTE_ID)) {
+            if (!hasExistingNotes) {
                 button.disabled = true;
             }
         } else {
             delete button.dataset.overwrite;
         }
-
-        button.setAttribute('title', `${verb} ${target}`);
+        
+        if (hasExistingNotes) {
+            button.dataset.duplicateType = 'known';
+            const verb = behavior === 'overwrite' ? 'Overwrite' : 'Add duplicate';
+            button.setAttribute('title', `${verb} ${target} (existing note)`);
+        } else {
+            button.dataset.duplicateType = 'new';
+            const verb = behavior === 'overwrite' ? 'Cannot overwrite' : 'Add duplicate';
+            button.setAttribute('title', `${verb} ${target} (new note)`);
+        }
 
         // eslint-disable-next-line no-underscore-dangle
         const hotkeyLabel = this._display._hotkeyHelpController.getHotkeyLabel(button);
         if (hotkeyLabel) {
             // eslint-disable-next-line no-underscore-dangle
-            this._display._hotkeyHelpController.setHotkeyLabel(button, `${verb} ${target} ({0})`);
+            const labelText = hasExistingNotes && behavior === 'overwrite' ? 
+                `Overwrite ${target} ({0})` : 
+                `Add duplicate ${target} ({0})`;
+            this._display._hotkeyHelpController.setHotkeyLabel(button, labelText);
         }
 
         const actionIcon = button.querySelector('.action-icon');
         if (actionIcon instanceof HTMLElement) {
-            actionIcon.dataset.icon = `${iconPrefix}-${mode}`;
+            const iconPrefix = behavior === 'overwrite' ? 'overwrite' : 'add-duplicate';
+            const iconSuffix = hasExistingNotes ? '' : '-new';
+            actionIcon.dataset.icon = `${iconPrefix}${iconSuffix}-${mode}`;
         }
     }
 

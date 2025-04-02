@@ -710,6 +710,18 @@ button.action-button:active {
 .icon[data-icon=add-duplicate-term-kanji] { background-image: url('/images/add-duplicate-term-kanji.svg'); }
 .icon[data-icon=add-duplicate-term-kana]  { background-image: url('/images/add-duplicate-term-kana.svg'); }
 .icon[data-icon=add-duplicate-kanji]  { background-image: url('/images/add-duplicate-term-kanji.svg'); }
+.icon[data-icon=add-duplicate-new-term-kanji] {
+    background-image: url('/images/add-duplicate-term-kanji.svg');
+    filter: brightness(0.8) sepia(1) hue-rotate(190deg) saturate(3);  /* Blue tint for new duplicates */
+}
+.icon[data-icon=add-duplicate-new-term-kana] {
+    background-image: url('/images/add-duplicate-term-kana.svg');
+    filter: brightness(0.8) sepia(1) hue-rotate(190deg) saturate(3);  /* Blue tint for new duplicates */
+}
+.icon[data-icon=add-duplicate-new-kanji] {
+    background-image: url('/images/add-duplicate-term-kanji.svg');
+    filter: brightness(0.8) sepia(1) hue-rotate(190deg) saturate(3);  /* Blue tint for new duplicates */
+}
 .icon[data-icon=play-audio]     { background-image: url('/images/play-audio.svg'); }
 .icon[data-icon=source-term]    { background-image: url('/images/source-term.svg'); }
 .icon[data-icon=entry-current]  { background-image: url('/images/entry-current.svg'); }
@@ -738,6 +750,28 @@ button.action-button:active {
 }
 .action-button-badge[data-icon=plus-thick] {
     background-color: var(--success-color);
+}
+
+/* Styling for duplicate buttons to show distinction */
+button.action-button[data-action="save-note"][data-duplicate-type="new"] .action-icon {
+    opacity: 0.8;  /* Slightly different opacity for visual distinction */
+}
+
+button.action-button[data-action="save-note"][data-duplicate-type="known"] .action-icon {
+    opacity: 1;
+}
+
+button.action-button[data-action="save-note"][data-duplicate-type="new"]::after {
+    content: "new";
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    font-size: 8px;
+    background-color: #3c6eb4;
+    color: white;
+    border-radius: 3px;
+    padding: 1px 3px;
+    pointer-events: none;
 }
 
 
