@@ -710,6 +710,19 @@ button.action-button:active {
 .icon[data-icon=add-duplicate-term-kanji] { background-image: url('/images/add-duplicate-term-kanji.svg'); }
 .icon[data-icon=add-duplicate-term-kana]  { background-image: url('/images/add-duplicate-term-kana.svg'); }
 .icon[data-icon=add-duplicate-kanji]  { background-image: url('/images/add-duplicate-term-kanji.svg'); }
+
+/* New duplicate styling - use a distinct color (green for new) */
+button.action-button[data-new-duplicate=true] {
+    background-color: rgba(92, 184, 92, 0.1); /* Light green background */
+}
+button.action-button[data-new-duplicate=true]:hover,
+button.action-button[data-new-duplicate=true]:focus-visible {
+    background-color: rgba(92, 184, 92, 0.2); /* Slightly darker on hover */
+}
+button.action-button[data-new-duplicate=true]:active {
+    background-color: rgba(92, 184, 92, 0.3); /* Even darker when active */
+}
+
 .icon[data-icon=play-audio]     { background-image: url('/images/play-audio.svg'); }
 .icon[data-icon=source-term]    { background-image: url('/images/source-term.svg'); }
 .icon[data-icon=entry-current]  { background-image: url('/images/entry-current.svg'); }

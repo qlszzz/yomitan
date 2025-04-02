@@ -654,12 +654,16 @@ export class Backend {
 
             const noteIds = isDuplicate ? duplicateNoteIds[originalIndices.indexOf(i)] : null;
             const noteInfos = (fetchAdditionalInfo && noteIds !== null && noteIds.length > 0) ? await this._notesCardsInfo(noteIds) : [];
+            
+            const isNewDuplicate = isDuplicate && noteIds !== null && 
+                (noteIds.length === 0 || (noteIds.length === 1 && noteIds[0] === INVALID_NOTE_ID));
 
             const info = {
                 canAdd: valid,
                 valid,
                 noteIds: noteIds,
                 noteInfos: noteInfos,
+                isNewDuplicate: isNewDuplicate
             };
 
             results.push(info);

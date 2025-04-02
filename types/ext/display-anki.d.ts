@@ -50,6 +50,10 @@ export type DictionaryEntryModeDetails = {
      * Anki IDs of duplicate notes. May contain INVALID_NOTE_ID for notes whose ID could not be found.
      */
     noteIds: Anki.NoteId[] | null;
+    /**
+     * Indicates whether this is a new duplicate (not already in Anki)
+     */
+    isNewDuplicate?: boolean;
     noteInfos?: (Anki.NoteInfo | null)[];
     ankiError: Error | null;
 };

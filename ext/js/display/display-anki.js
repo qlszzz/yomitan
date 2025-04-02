@@ -416,7 +416,12 @@ export class DisplayAnki {
      * @param {HTMLButtonElement} button
      * @param {number[]} noteIds
      */
-    _updateSaveButtonForDuplicateBehavior(button, noteIds) {
+    /**
+     * @param {HTMLButtonElement} button
+     * @param {number[]} noteIds
+     * @param {boolean} isNewDuplicate
+     */
+    _updateSaveButtonForDuplicateBehavior(button, noteIds, isNewDuplicate) {
         const behavior = this._duplicateBehavior;
         if (behavior === 'prevent') {
             button.disabled = true;
@@ -449,6 +454,12 @@ export class DisplayAnki {
         const actionIcon = button.querySelector('.action-icon');
         if (actionIcon instanceof HTMLElement) {
             actionIcon.dataset.icon = `${iconPrefix}-${mode}`;
+            
+            if (behavior === 'new' && isNewDuplicate) {
+                button.dataset.newDuplicate = 'true';
+            } else {
+                delete button.dataset.newDuplicate;
+            }
         }
     }
 
@@ -460,7 +471,7 @@ export class DisplayAnki {
         for (let i = 0, ii = dictionaryEntryDetails.length; i < ii; ++i) {
             /** @type {?Set<number>} */
             let allNoteIds = null;
-            for (const {mode, canAdd, noteIds, noteInfos, ankiError} of dictionaryEntryDetails[i].modeMap.values()) {
+            for (const {mode, canAdd, noteIds, noteInfos, ankiError, isNewDuplicate} of dictionaryEntryDetails[i].modeMap.values()) {
                 const button = this._saveButtonFind(i, mode);
                 if (button !== null) {
                     button.disabled = !canAdd;
@@ -471,7 +482,7 @@ export class DisplayAnki {
 
                     // If entry has noteIds, show the "add duplicate" button.
                     if (Array.isArray(noteIds) && noteIds.length > 0) {
-                        this._updateSaveButtonForDuplicateBehavior(button, noteIds);
+                        this._updateSaveButtonForDuplicateBehavior(button, noteIds, !!isNewDuplicate);
                     }
                 }
 
@@ -786,7 +797,7 @@ export class DisplayAnki {
                         allErrors.push(toError(e));
                     }
                 }
-                this._updateSaveButtonForDuplicateBehavior(button, [noteId]);
+                this._updateSaveButtonForDuplicateBehavior(button, [noteId], false);
 
                 this._updateViewNoteButton(dictionaryEntryIndex, [noteId], true);
             }
