@@ -1,0 +1,13 @@
+/* Add duplicate button styling for new cards */
+.action-button.duplicate-card-new {
+    background-color: var(--tag-name-background-color);
+    color: var(--tag-text-color);
+}
+
+.action-button.duplicate-card-new:hover {
+    filter: brightness(1.1);
+}
+
+.action-button.duplicate-card-new:active {
+    filter: brightness(0.9);
+}

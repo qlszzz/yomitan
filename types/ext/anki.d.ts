@@ -49,6 +49,7 @@ export type NoteInfoWrapper = {
     valid: boolean;
     noteIds: NoteId[] | null;
     noteInfos?: (NoteInfo | null)[];
+    cardQueues?: Record<CardId, number>;
 };
 
 export type NoteInfo = {
@@ -69,6 +70,7 @@ export type CardInfo = {
     noteId: NoteId;
     cardId: CardId;
     flags: number;
+    queue?: number;
 };
 
 export type ApiReflectResult = {

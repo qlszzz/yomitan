@@ -363,6 +363,19 @@ export class AnkiConnect {
     }
 
     /**
+     * Gets card queue information (0=new, 1=learning, 2=review, etc.).
+     * @param {import('anki').CardId} cardId The card ID.
+     * @returns {Promise<number>} The queue number.
+     */
+    async getCardQueue(cardId) {
+        if (!this._enabled) { return -1; }
+        await this._checkVersion();
+        const cardInfos = await this.cardsInfo([cardId]);
+        if (cardInfos.length === 0 || cardInfos[0] === null) { return -1; }
+        return cardInfos[0].queue;
+    }
+
+    /**
      * Gets information about the AnkiConnect APIs available.
      * @param {string[]} scopes A list of scopes to get information about.
      * @param {?string[]} actions A list of actions to check for

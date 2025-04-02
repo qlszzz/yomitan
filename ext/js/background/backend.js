@@ -654,12 +654,35 @@ export class Backend {
 
             const noteIds = isDuplicate ? duplicateNoteIds[originalIndices.indexOf(i)] : null;
             const noteInfos = (fetchAdditionalInfo && noteIds !== null && noteIds.length > 0) ? await this._notesCardsInfo(noteIds) : [];
+            
+            /** @type {Record<number, number>} */
+            let cardQueues = {};
+            
+            if (fetchAdditionalInfo && noteInfos && noteInfos.length > 0) {
+                try {
+                    for (const noteInfo of noteInfos) {
+                        if (noteInfo === null) { continue; }
+                        
+                        for (const cardInfo of noteInfo.cardsInfo) {
+                            if (cardInfo === null) { continue; }
+                            
+                            const cardInfos = await this._anki.cardsInfo([cardInfo.cardId]);
+                            if (cardInfos.length > 0 && cardInfos[0] !== null) {
+                                cardQueues[cardInfo.cardId] = cardInfos[0].queue || -1;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    log.error(e);
+                }
+            }
 
             const info = {
                 canAdd: valid,
                 valid,
                 noteIds: noteIds,
                 noteInfos: noteInfos,
+                cardQueues: Object.keys(cardQueues).length > 0 ? cardQueues : undefined
             };
 
             results.push(info);

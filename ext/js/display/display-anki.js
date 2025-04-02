@@ -415,8 +415,9 @@ export class DisplayAnki {
     /**
      * @param {HTMLButtonElement} button
      * @param {number[]} noteIds
+     * @param {Record<number, number> | null} cardQueues
      */
-    _updateSaveButtonForDuplicateBehavior(button, noteIds) {
+    _updateSaveButtonForDuplicateBehavior(button, noteIds, cardQueues) {
         const behavior = this._duplicateBehavior;
         if (behavior === 'prevent') {
             button.disabled = true;
@@ -450,6 +451,17 @@ export class DisplayAnki {
         if (actionIcon instanceof HTMLElement) {
             actionIcon.dataset.icon = `${iconPrefix}-${mode}`;
         }
+        
+        if (cardQueues !== null && cardQueues !== undefined) {
+            const hasNewCard = Object.values(cardQueues).some(queue => queue === 0);
+            if (hasNewCard) {
+                button.classList.add('duplicate-card-new');
+            } else {
+                button.classList.remove('duplicate-card-new');
+            }
+        } else {
+            button.classList.remove('duplicate-card-new');
+        }
     }
 
     /**
@@ -460,7 +472,7 @@ export class DisplayAnki {
         for (let i = 0, ii = dictionaryEntryDetails.length; i < ii; ++i) {
             /** @type {?Set<number>} */
             let allNoteIds = null;
-            for (const {mode, canAdd, noteIds, noteInfos, ankiError} of dictionaryEntryDetails[i].modeMap.values()) {
+            for (const {mode, canAdd, noteIds, noteInfos, ankiError, cardQueues} of dictionaryEntryDetails[i].modeMap.values()) {
                 const button = this._saveButtonFind(i, mode);
                 if (button !== null) {
                     button.disabled = !canAdd;
@@ -471,7 +483,7 @@ export class DisplayAnki {
 
                     // If entry has noteIds, show the "add duplicate" button.
                     if (Array.isArray(noteIds) && noteIds.length > 0) {
-                        this._updateSaveButtonForDuplicateBehavior(button, noteIds);
+                        this._updateSaveButtonForDuplicateBehavior(button, noteIds, cardQueues);
                     }
                 }
 
@@ -786,7 +798,7 @@ export class DisplayAnki {
                         allErrors.push(toError(e));
                     }
                 }
-                this._updateSaveButtonForDuplicateBehavior(button, [noteId]);
+                this._updateSaveButtonForDuplicateBehavior(button, [noteId], null);
 
                 this._updateViewNoteButton(dictionaryEntryIndex, [noteId], true);
             }
@@ -957,7 +969,7 @@ export class DisplayAnki {
             const {note, errors, requirements} = noteInfoList[i];
             const {canAdd, valid, noteIds, noteInfos} = infos[i];
             const {mode, index} = noteTargets[i];
-            results[index].modeMap.set(mode, {mode, note, errors, requirements, canAdd, valid, noteIds, noteInfos, ankiError});
+            results[index].modeMap.set(mode, {mode, note, errors, requirements, canAdd, valid, noteIds, noteInfos, ankiError, cardQueues: infos[i].cardQueues});
         }
         return results;
     }

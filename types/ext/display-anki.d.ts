@@ -52,6 +52,10 @@ export type DictionaryEntryModeDetails = {
     noteIds: Anki.NoteId[] | null;
     noteInfos?: (Anki.NoteInfo | null)[];
     ankiError: Error | null;
+    /**
+     * Queue status for cards associated with duplicate notes (0=new, 1=learning, 2=review, etc.)
+     */
+    cardQueues?: Record<Anki.CardId, number>;
 };
 
 export type CreateNoteResult = {
