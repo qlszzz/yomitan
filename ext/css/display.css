@@ -700,6 +700,13 @@ button.action-button:active {
     background-color: var(--action-button-active-color);
     box-shadow: none;
 }
+/* Duplicate card indicators */
+button.action-button.duplicate-new {
+    border-left: 3px solid var(--tag-popular-background-color);
+}
+button.action-button.duplicate-known {
+    border-left: 3px solid var(--tag-frequent-background-color);
+}
 .icon[data-icon=view-note]      { background-image: url('/images/view-note.svg'); }
 .icon[data-icon=add-term-kanji] { background-image: url('/images/add-term-kanji.svg'); }
 .icon[data-icon=add-term-kana]  { background-image: url('/images/add-term-kana.svg'); }

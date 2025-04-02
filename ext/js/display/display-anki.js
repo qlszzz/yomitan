@@ -427,23 +427,34 @@ export class DisplayAnki {
         const verb = behavior === 'overwrite' ? 'Overwrite' : 'Add duplicate';
         const iconPrefix = behavior === 'overwrite' ? 'overwrite' : 'add-duplicate';
         const target = mode === 'term-kanji' ? 'expression' : 'reading';
+        
+        const validNoteIds = noteIds.filter((id) => id !== INVALID_NOTE_ID);
+        const duplicateCount = validNoteIds.length;
+        
+        button.classList.remove('duplicate-new', 'duplicate-known');
+        
+        if (duplicateCount > 0) {
+            const isDuplicateKnown = duplicateCount > 1;
+            button.classList.add(isDuplicateKnown ? 'duplicate-known' : 'duplicate-new');
+        }
 
         if (behavior === 'overwrite') {
             button.dataset.overwrite = 'true';
-            if (!noteIds.some((id) => id !== INVALID_NOTE_ID)) {
+            if (!validNoteIds.length) {
                 button.disabled = true;
             }
         } else {
             delete button.dataset.overwrite;
         }
 
-        button.setAttribute('title', `${verb} ${target}`);
+        const countInfo = duplicateCount > 0 ? ` (${duplicateCount} duplicate${duplicateCount > 1 ? 's' : ''})` : '';
+        button.setAttribute('title', `${verb} ${target}${countInfo}`);
 
         // eslint-disable-next-line no-underscore-dangle
         const hotkeyLabel = this._display._hotkeyHelpController.getHotkeyLabel(button);
         if (hotkeyLabel) {
             // eslint-disable-next-line no-underscore-dangle
-            this._display._hotkeyHelpController.setHotkeyLabel(button, `${verb} ${target} ({0})`);
+            this._display._hotkeyHelpController.setHotkeyLabel(button, `${verb} ${target}${countInfo} ({0})`);
         }
 
         const actionIcon = button.querySelector('.action-icon');
