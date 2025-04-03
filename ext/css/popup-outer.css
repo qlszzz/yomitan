@@ -20,6 +20,12 @@ iframe.yomitan-popup {
     all: initial;
     font-size: 1px;
     background-color: #ffffff;
+    background-image: url('/images/custom/gon-background.svg');
+    background-size: 100px;
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-blend-mode: luminosity;
+    opacity: 0.9;
     border: 1em solid #999999;
     box-shadow: 0 0 10em rgba(0, 0, 0, 0.5);
     position: fixed;
@@ -30,6 +36,7 @@ iframe.yomitan-popup {
 }
 iframe.yomitan-popup[data-theme=dark] {
     background-color: #1e1e1e;
+    background-blend-mode: soft-light;
     border-color: #666666;
 }
 iframe.yomitan-popup[data-outer-theme=dark] {
